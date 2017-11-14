@@ -27,7 +27,7 @@ import { Masterbar } from './masterbar';
 import { isAtomicSite } from 'state/initial-state';
 
 export class Writing extends React.Component {
-    static displayName = 'WritingSettings';
+	static displayName = 'WritingSettings';
 
 	render() {
 		const commonProps = {
