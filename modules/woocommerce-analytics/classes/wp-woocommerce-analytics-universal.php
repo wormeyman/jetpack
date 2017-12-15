@@ -55,15 +55,6 @@ class Jetpack_WooCommerce_Analytics_Universal {
 	 * Make _wca available to queue events
 	 */
 	public function wp_head_top() {
-
-		if ( is_admin() ) {
-			return;
-		}
-
-		if ( ! class_exists( 'WooCommerce' ) ) {
-			return;
-		}
-
 		$wca_code = "<script>window._wca = window._wca || [];</script>";
 		echo "$wca_code\r\n";
 	}
@@ -73,15 +64,6 @@ class Jetpack_WooCommerce_Analytics_Universal {
 	 * Place script to call s.js, Store Analytics
 	 */
 	public function wp_head_bottom() {
-
-		if ( is_admin() ) {
-			return;
-		}
-
-		if ( ! class_exists( 'WooCommerce' ) ) {
-			return;
-		}
-
 		$async_code = "<script async src='https://stats.wp.com/s.js'></script>";
 		echo "$async_code\r\n";
 	}
@@ -116,15 +98,6 @@ class Jetpack_WooCommerce_Analytics_Universal {
 	 * On product lists or other non-product pages, add an event listener to "Add to Cart" button click
 	 */
 	public function loop_add_to_cart() {
-
-		if ( ! class_exists( 'WooCommerce' ) ) {
-			return;
-		}
-
-		$minimum_woocommerce_active = class_exists( 'WooCommerce' ) && version_compare( WC_VERSION, '3.0', '>=' );
-		if ( ! $minimum_woocommerce_active ) {
-			return;
-		}
 		$blogid   = Jetpack::get_option( 'id' );
 		$selector = '.add_to_cart_button:not(.product_type_variable, .product_type_grouped)';
 
