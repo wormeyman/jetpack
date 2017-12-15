@@ -98,10 +98,8 @@ class Jetpack_WooCommerce_Analytics_Universal {
 		$blogid = Jetpack::get_option( 'id' );
 		global $product;
 
-		$selector = '.single_add_to_cart_button';
-
 		wc_enqueue_js(
-			"jQuery( '" . esc_js( $selector ) . "' ).click( function() {
+			"jQuery( '" . esc_js( '.single_add_to_cart_button' ) . "' ).click( function() {
 				_wca.push( {
 					'_en': 'woocommerceanalytics_add_to_cart',
 					'blog_id': " . esc_js( $blogid ) . ",
@@ -203,7 +201,7 @@ class Jetpack_WooCommerce_Analytics_Universal {
 			esc_attr( $product->get_id() ),
 			esc_attr( $product->get_sku() )
 		);
-		$url            = str_replace( 'href=', $new_attributes );
+		$url = str_replace( 'href=', $new_attributes );
 		return $url;
 	}
 
