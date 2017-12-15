@@ -179,6 +179,21 @@ class Jetpack_WooCommerce_Analytics_Universal {
 	}
 
 	/**
+	 * Gather relevant product information
+	 *
+	 * @param array $product product
+	 * @return array
+	 */
+	public function get_item_details( $product ) {
+		return array(
+			'id'       => $product->get_id(),
+			'name'     => $product->get_title(),
+			'category' => Jetpack_WooCommerce_Analytics_Utils::get_product_categories_concatenated( $product ),
+			'price'    => $product->get_price(),
+		);
+	}
+
+	/**
 	 * Track a product page view
 	 */
 	public function product_detail() {
@@ -186,12 +201,8 @@ class Jetpack_WooCommerce_Analytics_Universal {
 		global $product;
 		$blogid = Jetpack::get_option( 'id' );
 
-		$item_details = array(
-			'id'       => $product->get_id(),
-			'name'     => $product->get_title(),
-			'category' => Jetpack_WooCommerce_Analytics_Utils::get_product_categories_concatenated( $product ),
-			'price'    => $product->get_price(),
-		);
+		$item_details = $this->get_item_details( $product );
+
 		wc_enqueue_js(
 			"_wca.push( {
 				'_en': 'woocommerceanalytics_product_view',
@@ -220,13 +231,7 @@ class Jetpack_WooCommerce_Analytics_Universal {
 			*/
 			$product = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
 
-			$item_details = array(
-				'id'       => $product->get_id(),
-				'name'     => $product->get_title(),
-				'category' => Jetpack_WooCommerce_Analytics_Utils::get_product_categories_concatenated( $product ),
-				'price'    => $product->get_price(),
-				'quantity' => $cart_item['quantity'],
-			);
+			$item_details = $this->get_item_details( $product );
 
 			array_push(
 				$universal_commands,
@@ -236,7 +241,7 @@ class Jetpack_WooCommerce_Analytics_Universal {
 					'pi': '" . esc_js( $item_details['id'] ) . "',
 					'pn': '" . esc_js( $item_details['name'] ) . "',
 					'pc': '" . esc_js( $item_details['category'] ) . "',
-					'pq': '" . esc_js( $item_details['quantity'] ) . "',
+					'pq': '" . esc_js( $cart_item['quantity'] ) . "',
 					'ui': '" . esc_js( $this->get_user_id() ) . "',
 				} );"
 			);
@@ -259,13 +264,7 @@ class Jetpack_WooCommerce_Analytics_Universal {
 		foreach ( $order->get_items() as $order_item_id => $order_item ) {
 			$product = $order->get_product_from_item( $order_item );
 
-			$item_details = array(
-				'id'       => $product->get_id(),
-				'name'     => $product->get_title(),
-				'category' => Jetpack_WooCommerce_Analytics_Utils::get_product_categories_concatenated( $product ),
-				'price'    => $product->get_price(),
-				'order'    => $order->get_order_number(),
-			);
+			$item_details = $this->get_item_details( $product );
 
 			array_push(
 				$universal_commands,
@@ -276,7 +275,7 @@ class Jetpack_WooCommerce_Analytics_Universal {
 					'pn': '" . esc_js( $item_details['name'] ) . "',
 					'pc': '" . esc_js( $item_details['category'] ) . "',
 					'pp': '" . esc_js( $item_details['price'] ) . "',
-					'oi': '" . esc_js( $item_details['order'] ) . "',
+					'oi': '" . esc_js( $order->get_order_number() ) . "',
 					'ui': '" . esc_js( $this->get_user_id() ) . "',
 				} );"
 			);
