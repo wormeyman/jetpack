@@ -233,18 +233,16 @@ class Jetpack_WooCommerce_Analytics_Universal {
 
 			$item_details = $this->get_item_details( $product );
 
-			array_push(
-				$universal_commands,
-				"_wca.push( {
-					'_en': 'woocommerceanalytics_product_checkout',
-					'blog_id': '" . esc_js( $blogid ) . "',
-					'pi': '" . esc_js( $item_details['id'] ) . "',
-					'pn': '" . esc_js( $item_details['name'] ) . "',
-					'pc': '" . esc_js( $item_details['category'] ) . "',
-					'pq': '" . esc_js( $cart_item['quantity'] ) . "',
-					'ui': '" . esc_js( $this->get_user_id() ) . "',
-				} );"
-			);
+			$universal_commands[] = "_wca.push( {
+				'_en': 'woocommerceanalytics_product_checkout',
+				'blog_id': '" . esc_js( $blogid ) . "',
+				'pi': '" . esc_js( $item_details['id'] ) . "',
+				'pn': '" . esc_js( $item_details['name'] ) . "',
+				'pc': '" . esc_js( $item_details['category'] ) . "',
+				'pp': '" . esc_js( $item_details['price'] ) . "',
+				'pq': '" . esc_js( $cart_item['quantity'] ) . "',
+				'ui': '" . esc_js( $this->get_user_id() ) . "',
+			} );";
 		}
 
 		wc_enqueue_js( implode( "\r\n", $universal_commands ) );
@@ -266,19 +264,17 @@ class Jetpack_WooCommerce_Analytics_Universal {
 
 			$item_details = $this->get_item_details( $product );
 
-			array_push(
-				$universal_commands,
-				"_wca.push( {
-					'_en': 'woocommerceanalytics_product_purchase',
-					'blog_id': '" . esc_js( $blogid ) . "',
-					'pi': '" . esc_js( $item_details['id'] ) . "',
-					'pn': '" . esc_js( $item_details['name'] ) . "',
-					'pc': '" . esc_js( $item_details['category'] ) . "',
-					'pp': '" . esc_js( $item_details['price'] ) . "',
-					'oi': '" . esc_js( $order->get_order_number() ) . "',
-					'ui': '" . esc_js( $this->get_user_id() ) . "',
-				} );"
-			);
+			$universal_commands[] = "_wca.push( {
+				'_en': 'woocommerceanalytics_product_purchase',
+				'blog_id': '" . esc_js( $blogid ) . "',
+				'pi': '" . esc_js( $item_details['id'] ) . "',
+				'pn': '" . esc_js( $item_details['name'] ) . "',
+				'pc': '" . esc_js( $item_details['category'] ) . "',
+				'pp': '" . esc_js( $item_details['price'] ) . "',
+				'pq': '" . esc_js( $order_item->get_quantity() ) . "',
+				'oi': '" . esc_js( $order->get_order_number() ) . "',
+				'ui': '" . esc_js( $this->get_user_id() ) . "',
+			} );";
 		}
 
 		wc_enqueue_js( implode( "\r\n", $universal_commands ) );
