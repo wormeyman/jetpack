@@ -313,7 +313,9 @@ class Jetpack_WooCommerce_Analytics_Universal {
 	 */
 	public function get_user_id() {
 		if ( is_user_logged_in() ) {
-			return get_current_user_id();
+			$blogid = Jetpack::get_option( 'id' );
+			$userid = get_current_user_id();
+			return $blogid . ":" . $userid;
 		}
 		return 'null';
 	}
