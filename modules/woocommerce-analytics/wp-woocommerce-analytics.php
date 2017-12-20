@@ -5,7 +5,7 @@
  * @package Jetpack
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) || isset( $jetpack_woocommerce_analytics ) ) {
 	exit;
 }
 
