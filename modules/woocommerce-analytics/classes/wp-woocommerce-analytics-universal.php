@@ -64,7 +64,8 @@ class Jetpack_WooCommerce_Analytics_Universal {
 	 * Place script to call s.js, Store Analytics
 	 */
 	public function wp_head_bottom() {
-		$async_code = "<script async src='https://stats.wp.com/s.js'></script>";
+		$filename = 's-' . gmdate( 'YWd' ) . '.js';
+		$async_code = "<script async src='https://stats.wp.com/" . $filename . "'></script>";
 		echo "$async_code\r\n";
 	}
 
