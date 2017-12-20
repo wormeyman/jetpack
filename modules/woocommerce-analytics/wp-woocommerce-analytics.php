@@ -38,7 +38,7 @@ class Jetpack_WooCommerce_Analytics {
 	 *
 	 * @return bool
 	 */
-	public function isActiveStore() {
+	public static function isActiveStore() {
 		// Tracking only Site pages
 		if ( is_admin() ) {
 			return false;
