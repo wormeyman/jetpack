@@ -38,9 +38,13 @@ class Jetpack_WooCommerce_Analytics {
 	 *
 	 * @return bool
 	 */
-	public static function isActiveStore() {
+	public static function shouldTrackStore() {
 		// Tracking only Site pages
 		if ( is_admin() ) {
+			return false;
+		}
+		// Don't track site admins
+		if ( is_user_logged_in() && in_array( 'administrator',  wp_get_current_user()->roles ) ) {
 			return false;
 		}
 		// Make sure Jetpack is installed and active
@@ -77,7 +81,7 @@ class Jetpack_WooCommerce_Analytics {
 	 * Function to instantiate our class and make it a singleton
 	 */
 	public static function get_instance() {
-		if ( ! Jetpack_WooCommerce_Analytics::isActiveStore() ) {
+		if ( ! Jetpack_WooCommerce_Analytics::shouldTrackStore() ) {
 			return;
 		}
 		if ( ! self::$instance ) {
