@@ -14,7 +14,6 @@ require_once( WORDADS_ROOT . '/php/cron.php' );
 class WordAds {
 
 	public $params = null;
-	private $belowpost_loaded = false;
 
 	/**
 	 * The different supported ad types.
@@ -114,8 +113,14 @@ class WordAds {
 		add_action( 'wp_head', array( $this, 'insert_head_meta' ), 20 );
 		add_action( 'wp_head', array( $this, 'insert_head_iponweb' ), 30 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_filter( 'the_content', array( $this, 'insert_ad' ) );
-		add_filter( 'the_excerpt', array( $this, 'insert_ad' ) );
+
+		if ( ! apply_filters( 'wordads_content_disable', false ) ) {
+			add_filter( 'the_content', array( $this, 'insert_ad' ) );
+		}
+
+		if ( ! apply_filters( 'wordads_excerpt_disable', false ) ) {
+			add_filter( 'the_excerpt', array( $this, 'insert_ad' ) );
+		}
 
 		if ( $this->option( 'enable_header_ad', true ) ) {
 			switch ( get_stylesheet() ) {
@@ -307,11 +312,6 @@ HTML;
 				$blocker_unit = $this->params->mobile_device ? 'top_mrec' : 'top';
 				$snippet = $this->get_ad_snippet( $section_id, $height, $width, $blocker_unit );
 			} else if ( 'belowpost' == $spot ) {
-				if ( ! is_main_query() || $this->belowpost_loaded ) {
-					// only load once on themes that do weird stuff w/ `the_excerpt` and `the_content`
-					return '';
-				}
-
 				$section_id = 0 === $this->params->blog_id ? WORDADS_API_TEST_ID : $this->params->blog_id . '1';
 				$width = 300;
 				$height = 250;
@@ -321,8 +321,6 @@ HTML;
 					$section_id2 = 0 === $this->params->blog_id ? WORDADS_API_TEST_ID2 : $this->params->blog_id . '4';
 					$snippet .= $this->get_ad_snippet( $section_id2, $height, $width, 'mrec2', 'float:left;margin-top:0px;' );
 				}
-
-				$this->belowpost_loaded = true;
 			}
 		} else if ( 'house' == $type ) {
 			$leaderboard = 'top' == $spot && ! $this->params->mobile_device;
